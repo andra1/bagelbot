@@ -1,0 +1,20 @@
+
+items:
+  - name: "Everything Bagel"
+    options:
+      spread: "Cream Cheese"
+      toasted: true
+    quantity: 2
+  - name: "Plain Bagel"
+    options:
+      spread: "Butter"
+      toasted: false
+    quantity: 1
+tip_percent: 15
+pickup_time: "08:15 AM"
+notes: "Please slice the bagels."
+substitutions:
+  - for: "Everything Bagel"
+    try:
+      - "Sesame Bagel"
+      - "Garlic Bagel"

@@ -1,0 +1,6 @@
+
+requests
+pyyaml
+browser-cookie3
+python-dotenv
+rich
