@@ -4,3 +4,4 @@ pyyaml
 browser-cookie3
 python-dotenv
 rich
+beautifulsoup4
