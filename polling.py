@@ -624,6 +624,55 @@ if __name__ == "__main__":
     #menu_data = get_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
     #display_menu_items(menu_data)
     #get_drop_info()
-    items = get_all_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    display_all_menu_items(items)
+    #items = get_all_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
+    #display_all_menu_items(items)
+
+    # First, test if the API is accessible at all
+    console.print("[bold cyan]Testing API connectivity...[/bold cyan]")
+    try:
+        response = requests.get("https://bets.hotplate.com/trpc/shop.getEvent", timeout=5)
+        console.print(f"[green]✓ API is accessible[/green] (status: {response.status_code})\n")
+    except Exception as e:
+        console.print(f"[red]✗ API connectivity issue: {e}[/red]\n")
+        console.print("[yellow]Network restriction detected. Showing test plan instead...[/yellow]\n")
+
+        # Show what the function would test
+        console.print("[bold cyan]Cart Validation Test Plan:[/bold cyan]\n")
+        console.print("The validate_carts() function tests the following endpoints:\n")
+
+        test_endpoints = [
+            ("shop.createCart", "POST", "Create a new shopping cart for an event"),
+            ("shop.addToCart", "POST", "Add menu items to an existing cart"),
+            ("shop.getCart", "GET", "Retrieve cart details and contents"),
+            ("shop.updateCart", "POST", "Update cart items or quantities"),
+            ("cart.create", "POST", "Alternative cart creation endpoint"),
+            ("cart.addItem", "POST", "Alternative add item endpoint"),
+            ("cart.get", "GET", "Alternative get cart endpoint"),
+        ]
+
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Endpoint", style="cyan")
+        table.add_column("Method", style="yellow", justify="center")
+        table.add_column("Purpose", style="white")
+
+        for endpoint, method, purpose in test_endpoints:
+            table.add_row(endpoint, method, purpose)
+
+        console.print(table)
+        console.print("\n[dim]Each endpoint is tested with realistic parameters to determine which APIs are functional for cart operations.[/dim]\n")
+
+        import sys
+        sys.exit(0)
+
+    # Test cart validation with a real event ID
+    results = validate_carts(event_id="458ea76e-1f07-44ed-b6d5-451287f8e10b")
+    display_cart_validation_results(results)
+
+    # Print detailed error for first failed endpoint
+    console.print("\n[bold yellow]Detailed Error Analysis:[/bold yellow]")
+    for endpoint_name, result in results.items():
+        if not result.get("success") and result.get("error"):
+            console.print(f"\n[cyan]{endpoint_name}:[/cyan]")
+            console.print(f"  Error: {result['error']}")
+            break
     
