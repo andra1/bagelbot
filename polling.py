@@ -618,61 +618,573 @@ def display_cart_validation_results(results: dict):
                 console.print(f"  • {endpoint_name} ({result['method']}) - {result['url']}")
 
 
-if __name__ == "__main__":
-    #data = get_old_drops()
-    #display_drops(data)
-    #menu_data = get_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    #display_menu_items(menu_data)
-    #get_drop_info()
-    #items = get_all_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    #display_all_menu_items(items)
+def discover_add_to_cart_payload(event_id: str, cart_id: str, menu_item: dict) -> dict:
+    """Discover the correct payload structure for adding items to cart.
 
-    # First, test if the API is accessible at all
+    Tests multiple payload variations against the shop.addToCart endpoint
+    to determine the exact structure HotPlate expects.
+
+    Args:
+        event_id: The event ID for the drop.
+        cart_id: An existing cart ID (from shop.createCart).
+        menu_item: A menu item dict from get_all_menu_items() with options.
+
+    Returns:
+        Dictionary containing:
+        - working_payload: The payload structure that worked (if found)
+        - test_results: Results from each payload variation tested
+        - error_analysis: Analysis of error messages to infer structure
+    """
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "Origin": "https://www.hotplate.com",
+        "Referer": "https://www.hotplate.com/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    }
+
+    # Build sample option selections from the menu item
+    sample_options = []
+    sample_options_flat = []
+    sample_options_by_category = {}
+
+    for opt_cat in menu_item.get("options", []):
+        if opt_cat.get("choices"):
+            first_choice = opt_cat["choices"][0]
+            # Format 1: Array of {optionCategoryId, selectedChoiceIds}
+            sample_options.append({
+                "optionCategoryId": opt_cat["id"],
+                "selectedChoiceIds": [first_choice["id"]]
+            })
+            # Format 2: Flat array of choice IDs
+            sample_options_flat.append(first_choice["id"])
+            # Format 3: Object keyed by category ID
+            sample_options_by_category[opt_cat["id"]] = [first_choice["id"]]
+
+    # Define payload variations to test
+    event_menu_item_id = menu_item["id"]
+    base_menu_item_id = menu_item.get("menu_item_id")
+
+    payload_variations = [
+        # Variation 1: Basic with eventMenuItemId (most likely based on code)
+        {
+            "name": "basic_eventMenuItemId",
+            "payload": {
+                "cartId": cart_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1
+            }
+        },
+        # Variation 2: With selectedOptions array
+        {
+            "name": "with_selectedOptions_array",
+            "payload": {
+                "cartId": cart_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1,
+                "selectedOptions": sample_options
+            }
+        },
+        # Variation 3: Options as flat array of choice IDs
+        {
+            "name": "with_options_flat",
+            "payload": {
+                "cartId": cart_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1,
+                "options": sample_options_flat
+            }
+        },
+        # Variation 4: Options as object keyed by category
+        {
+            "name": "with_options_by_category",
+            "payload": {
+                "cartId": cart_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1,
+                "options": sample_options_by_category
+            }
+        },
+        # Variation 5: Using menuItemId instead
+        {
+            "name": "with_menuItemId",
+            "payload": {
+                "cartId": cart_id,
+                "menuItemId": base_menu_item_id,
+                "quantity": 1,
+                "selectedOptions": sample_options
+            }
+        },
+        # Variation 6: Using itemId (common TRPC pattern)
+        {
+            "name": "with_itemId",
+            "payload": {
+                "cartId": cart_id,
+                "itemId": event_menu_item_id,
+                "quantity": 1,
+                "selectedOptions": sample_options
+            }
+        },
+        # Variation 7: Including eventId
+        {
+            "name": "with_eventId",
+            "payload": {
+                "cartId": cart_id,
+                "eventId": event_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1,
+                "selectedOptions": sample_options
+            }
+        },
+        # Variation 8: Nested item object
+        {
+            "name": "nested_item_object",
+            "payload": {
+                "cartId": cart_id,
+                "item": {
+                    "eventMenuItemId": event_menu_item_id,
+                    "quantity": 1,
+                    "selectedOptions": sample_options
+                }
+            }
+        },
+        # Variation 9: With optionSelections (alternative naming)
+        {
+            "name": "with_optionSelections",
+            "payload": {
+                "cartId": cart_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1,
+                "optionSelections": sample_options
+            }
+        },
+        # Variation 10: Simple choices array
+        {
+            "name": "with_choices",
+            "payload": {
+                "cartId": cart_id,
+                "eventMenuItemId": event_menu_item_id,
+                "quantity": 1,
+                "choices": sample_options_flat
+            }
+        },
+    ]
+
+    results = {
+        "working_payload": None,
+        "test_results": [],
+        "error_analysis": [],
+        "sample_options_used": sample_options
+    }
+
+    console.print(f"\n[bold cyan]Discovering Add-to-Cart Payload Structure[/bold cyan]")
+    console.print(f"[dim]Testing {len(payload_variations)} payload variations...[/dim]\n")
+    console.print(f"Item: {menu_item['title']} ({event_menu_item_id})")
+    console.print(f"Cart: {cart_id}\n")
+
+    url = "https://bets.hotplate.com/trpc/shop.addToCart"
+
+    for variation in payload_variations:
+        name = variation["name"]
+        payload = variation["payload"]
+
+        console.print(f"Testing [yellow]{name}[/yellow]... ", end="")
+
+        try:
+            response = requests.post(
+                url,
+                json={"input": payload},
+                headers=headers,
+                timeout=10
+            )
+
+            try:
+                response_data = response.json()
+            except json.JSONDecodeError:
+                response_data = {"raw": response.text}
+
+            is_success = 200 <= response.status_code < 300
+            has_error = "error" in response_data
+
+            result = {
+                "name": name,
+                "payload": payload,
+                "status_code": response.status_code,
+                "success": is_success and not has_error,
+                "response": response_data
+            }
+            results["test_results"].append(result)
+
+            if is_success and not has_error:
+                console.print("[green]✓ SUCCESS[/green]")
+                results["working_payload"] = payload
+                # Analyze successful response structure
+                console.print(f"  [green]Found working payload![/green]")
+                console.print(f"  Response: {json.dumps(response_data, indent=2)[:500]}")
+            else:
+                console.print(f"[red]✗ FAILED[/red] ({response.status_code})")
+                # Analyze error for clues about expected structure
+                error_msg = ""
+                if isinstance(response_data, dict):
+                    error_obj = response_data.get("error", {})
+                    if isinstance(error_obj, dict):
+                        error_msg = error_obj.get("message", "")
+                        # Look for validation errors that hint at expected fields
+                        if "data" in error_obj:
+                            zodError = error_obj.get("data", {}).get("zodError", {})
+                            if zodError:
+                                results["error_analysis"].append({
+                                    "variation": name,
+                                    "zodError": zodError
+                                })
+                                console.print(f"    [dim]Zod validation hint: {zodError}[/dim]")
+
+        except requests.exceptions.Timeout:
+            results["test_results"].append({
+                "name": name,
+                "payload": payload,
+                "status_code": None,
+                "success": False,
+                "error": "Timeout"
+            })
+            console.print("[red]✗ TIMEOUT[/red]")
+
+        except requests.exceptions.RequestException as e:
+            results["test_results"].append({
+                "name": name,
+                "payload": payload,
+                "status_code": None,
+                "success": False,
+                "error": str(e)
+            })
+            console.print(f"[red]✗ ERROR[/red] ({str(e)[:30]})")
+
+    # Summary
+    console.print(f"\n[bold]Discovery Summary:[/bold]")
+    if results["working_payload"]:
+        console.print(f"[green]✓ Found working payload structure![/green]")
+        console.print(f"Payload: {json.dumps(results['working_payload'], indent=2)}")
+    else:
+        console.print(f"[yellow]No working payload found. Analyze error messages for clues.[/yellow]")
+        if results["error_analysis"]:
+            console.print(f"\n[bold]Validation Error Hints:[/bold]")
+            for hint in results["error_analysis"]:
+                console.print(f"  {hint['variation']}: {hint['zodError']}")
+
+    return results
+
+
+def add_item_to_cart(
+    cart_id: str,
+    event_menu_item_id: str,
+    quantity: int = 1,
+    selected_options: list[dict] = None
+) -> dict:
+    """Add an item to the cart with selected options.
+
+    Args:
+        cart_id: UUID of the cart (from create_cart).
+        event_menu_item_id: The event-specific menu item ID (from get_all_menu_items).
+        quantity: Number of items to add.
+        selected_options: List of option selections, each containing:
+            - optionCategoryId: The option category ID
+            - selectedChoiceIds: List of selected choice IDs
+
+    Returns:
+        Dictionary with the API response or error details.
+
+    Example:
+        >>> options = [
+        ...     {"optionCategoryId": "cat1", "selectedChoiceIds": ["choice1"]},
+        ...     {"optionCategoryId": "cat2", "selectedChoiceIds": ["choice2", "choice3"]}
+        ... ]
+        >>> result = add_item_to_cart("cart-uuid", "item-uuid", 2, options)
+    """
+    url = "https://bets.hotplate.com/trpc/shop.addToCart"
+
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "Origin": "https://www.hotplate.com",
+        "Referer": "https://www.hotplate.com/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    }
+
+    # Build the payload - structure based on discovery testing
+    # Most likely: selectedOptions as array of {optionCategoryId, selectedChoiceIds}
+    payload = {
+        "cartId": cart_id,
+        "eventMenuItemId": event_menu_item_id,
+        "quantity": quantity,
+    }
+
+    if selected_options:
+        payload["selectedOptions"] = selected_options
+
+    try:
+        response = requests.post(
+            url,
+            json={"input": payload},
+            headers=headers,
+            timeout=10
+        )
+        response.raise_for_status()
+        return {
+            "success": True,
+            "status_code": response.status_code,
+            "data": response.json()
+        }
+    except requests.exceptions.RequestException as e:
+        error_data = {}
+        if hasattr(e, 'response') and e.response is not None:
+            try:
+                error_data = e.response.json()
+            except (json.JSONDecodeError, AttributeError):
+                error_data = {"raw": e.response.text if e.response else str(e)}
+
+        return {
+            "success": False,
+            "status_code": getattr(e.response, 'status_code', None) if hasattr(e, 'response') else None,
+            "error": str(e),
+            "error_data": error_data
+        }
+
+
+def build_options_for_item(menu_item: dict, selections: dict) -> list[dict]:
+    """Build selectedOptions array from human-readable selections.
+
+    Args:
+        menu_item: Menu item dict from get_all_menu_items().
+        selections: Dict mapping option category titles to selected choice titles.
+            Example: {"Schmear Type": "Cream Cheese", "Add-ons": ["Lox", "Capers"]}
+
+    Returns:
+        List of option selections formatted for add_item_to_cart().
+
+    Example:
+        >>> item = get_all_menu_items(event_id)[0]
+        >>> options = build_options_for_item(item, {
+        ...     "Schmear Type": "Cream Cheese",
+        ...     "Toppings": ["Lox", "Capers"]
+        ... })
+        >>> add_item_to_cart(cart_id, item["id"], 1, options)
+    """
+    formatted_options = []
+
+    for opt_category in menu_item.get("options", []):
+        cat_title = opt_category["title"]
+
+        if cat_title not in selections:
+            # Skip categories not in selections
+            # Note: Required categories (min_selections > 0) must be included!
+            continue
+
+        selected = selections[cat_title]
+        # Normalize to list
+        if isinstance(selected, str):
+            selected = [selected]
+
+        # Map choice titles to IDs
+        choice_ids = []
+        for choice in opt_category.get("choices", []):
+            if choice["title"] in selected:
+                choice_ids.append(choice["id"])
+
+        if choice_ids:
+            formatted_options.append({
+                "optionCategoryId": opt_category["id"],
+                "selectedChoiceIds": choice_ids
+            })
+
+    return formatted_options
+
+
+def validate_item_options(menu_item: dict, selected_options: list[dict]) -> tuple[bool, list[str]]:
+    """Validate that selected options meet item requirements.
+
+    Args:
+        menu_item: Menu item dict from get_all_menu_items().
+        selected_options: List of option selections to validate.
+
+    Returns:
+        Tuple of (is_valid, list of error messages).
+    """
+    errors = []
+
+    # Build lookup of selected options by category ID
+    selections_by_cat = {
+        opt["optionCategoryId"]: opt["selectedChoiceIds"]
+        for opt in (selected_options or [])
+    }
+
+    for opt_category in menu_item.get("options", []):
+        cat_id = opt_category["id"]
+        cat_title = opt_category["title"]
+        min_sel = opt_category.get("min_selections", 0)
+        max_sel = opt_category.get("max_selections", 1)
+
+        selected = selections_by_cat.get(cat_id, [])
+        num_selected = len(selected)
+
+        # Check minimum selections
+        if num_selected < min_sel:
+            errors.append(
+                f"'{cat_title}' requires at least {min_sel} selection(s), got {num_selected}"
+            )
+
+        # Check maximum selections
+        if num_selected > max_sel:
+            errors.append(
+                f"'{cat_title}' allows at most {max_sel} selection(s), got {num_selected}"
+            )
+
+        # Validate choice IDs exist
+        valid_choice_ids = {c["id"] for c in opt_category.get("choices", [])}
+        for choice_id in selected:
+            if choice_id not in valid_choice_ids:
+                errors.append(
+                    f"Invalid choice ID '{choice_id}' for category '{cat_title}'"
+                )
+
+    return (len(errors) == 0, errors)
+
+
+if __name__ == "__main__":
+    import sys
+
+    # Parse command line arguments
+    command = sys.argv[1] if len(sys.argv) > 1 else "help"
+
+    if command == "help":
+        console.print("\n[bold cyan]BagelBot - Holey Dough Automation[/bold cyan]\n")
+        console.print("Usage: python polling.py <command>\n")
+        console.print("[bold]Commands:[/bold]")
+        console.print("  drops        - Display past drop events")
+        console.print("  menu         - Display menu items for most recent drop")
+        console.print("  validate     - Test cart API endpoints")
+        console.print("  discover     - Discover add-to-cart payload structure")
+        console.print("  help         - Show this help message\n")
+        sys.exit(0)
+
+    # Test API connectivity first
     console.print("[bold cyan]Testing API connectivity...[/bold cyan]")
     try:
         response = requests.get("https://bets.hotplate.com/trpc/shop.getEvent", timeout=5)
         console.print(f"[green]✓ API is accessible[/green] (status: {response.status_code})\n")
     except Exception as e:
         console.print(f"[red]✗ API connectivity issue: {e}[/red]\n")
-        console.print("[yellow]Network restriction detected. Showing test plan instead...[/yellow]\n")
+        console.print("[yellow]Network restriction detected. Run with network access.[/yellow]\n")
+        sys.exit(1)
 
-        # Show what the function would test
-        console.print("[bold cyan]Cart Validation Test Plan:[/bold cyan]\n")
-        console.print("The validate_carts() function tests the following endpoints:\n")
+    if command == "drops":
+        data = get_old_drops()
+        display_drops(data)
 
-        test_endpoints = [
-            ("shop.createCart", "POST", "Create a new shopping cart for an event"),
-            ("shop.addToCart", "POST", "Add menu items to an existing cart"),
-            ("shop.getCart", "GET", "Retrieve cart details and contents"),
-            ("shop.updateCart", "POST", "Update cart items or quantities"),
-            ("cart.create", "POST", "Alternative cart creation endpoint"),
-            ("cart.addItem", "POST", "Alternative add item endpoint"),
-            ("cart.get", "GET", "Alternative get cart endpoint"),
-        ]
+    elif command == "menu":
+        events = get_old_drop_event_ids()
+        if events:
+            event_id = events[0]["id"]
+            console.print(f"[dim]Using event: {events[0]['title']}[/dim]\n")
+            items = get_all_menu_items(event_id)
+            display_all_menu_items(items)
+        else:
+            console.print("[red]No events found[/red]")
 
-        table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Endpoint", style="cyan")
-        table.add_column("Method", style="yellow", justify="center")
-        table.add_column("Purpose", style="white")
+    elif command == "validate":
+        events = get_old_drop_event_ids()
+        event_id = events[0]["id"] if events else "458ea76e-1f07-44ed-b6d5-451287f8e10b"
+        results = validate_carts(event_id=event_id)
+        display_cart_validation_results(results)
 
-        for endpoint, method, purpose in test_endpoints:
-            table.add_row(endpoint, method, purpose)
+    elif command == "discover":
+        # Discover the correct add-to-cart payload structure
+        console.print("[bold cyan]Add-to-Cart Payload Discovery[/bold cyan]\n")
 
-        console.print(table)
-        console.print("\n[dim]Each endpoint is tested with realistic parameters to determine which APIs are functional for cart operations.[/dim]\n")
+        # Step 1: Get an event
+        events = get_old_drop_event_ids()
+        if not events:
+            console.print("[red]No events found[/red]")
+            sys.exit(1)
 
-        import sys
-        sys.exit(0)
+        event_id = events[0]["id"]
+        console.print(f"Event: {events[0]['title']}")
 
-    # Test cart validation with a real event ID
-    results = validate_carts(event_id="458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    display_cart_validation_results(results)
+        # Step 2: Get menu items
+        menu_items = get_all_menu_items(event_id)
+        if not menu_items:
+            console.print("[red]No menu items found[/red]")
+            sys.exit(1)
 
-    # Print detailed error for first failed endpoint
-    console.print("\n[bold yellow]Detailed Error Analysis:[/bold yellow]")
-    for endpoint_name, result in results.items():
-        if not result.get("success") and result.get("error"):
-            console.print(f"\n[cyan]{endpoint_name}:[/cyan]")
-            console.print(f"  Error: {result['error']}")
-            break
+        # Find an item with options for better testing
+        test_item = None
+        for item in menu_items:
+            if item.get("options"):
+                test_item = item
+                break
+        if not test_item:
+            test_item = menu_items[0]
+
+        console.print(f"Test item: {test_item['title']}")
+
+        # Step 3: We need a cart ID - first try to create one
+        console.print("\n[bold]Step 1: Creating test cart...[/bold]")
+        import uuid
+        test_cart_id = str(uuid.uuid4())
+
+        headers = {
+            "Accept": "*/*",
+            "Content-Type": "application/json",
+            "Origin": "https://www.hotplate.com",
+            "Referer": "https://www.hotplate.com/",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+        }
+
+        # Try to create a cart
+        try:
+            create_response = requests.post(
+                "https://bets.hotplate.com/trpc/shop.createCart",
+                json={"input": {"eventId": event_id, "fulfillmentType": "PICKUP"}},
+                headers=headers,
+                timeout=10
+            )
+            cart_data = create_response.json()
+            console.print(f"Create cart response: {json.dumps(cart_data, indent=2)[:500]}")
+
+            # Extract cart ID from response if available
+            if "result" in cart_data and "data" in cart_data["result"]:
+                cart_info = cart_data["result"]["data"]
+                if isinstance(cart_info, dict) and "id" in cart_info:
+                    test_cart_id = cart_info["id"]
+                    console.print(f"[green]Got cart ID: {test_cart_id}[/green]")
+                elif isinstance(cart_info, str):
+                    test_cart_id = cart_info
+                    console.print(f"[green]Got cart ID: {test_cart_id}[/green]")
+        except Exception as e:
+            console.print(f"[yellow]Could not create cart: {e}[/yellow]")
+            console.print(f"[dim]Using generated UUID: {test_cart_id}[/dim]")
+
+        # Step 4: Run discovery
+        console.print("\n[bold]Step 2: Testing payload variations...[/bold]")
+        results = discover_add_to_cart_payload(event_id, test_cart_id, test_item)
+
+        # Step 5: Show results
+        console.print("\n[bold]Discovery Results:[/bold]")
+        if results["working_payload"]:
+            console.print("\n[green]✓ SUCCESS! Working payload structure found:[/green]")
+            console.print(json.dumps(results["working_payload"], indent=2))
+        else:
+            console.print("\n[yellow]No working payload found. Error analysis:[/yellow]")
+            for result in results["test_results"][:3]:  # Show first 3
+                console.print(f"\n[cyan]{result['name']}:[/cyan]")
+                resp = result.get("response", {})
+                if isinstance(resp, dict) and "error" in resp:
+                    console.print(f"  Error: {json.dumps(resp['error'], indent=2)[:300]}")
+
+    else:
+        console.print(f"[red]Unknown command: {command}[/red]")
+        console.print("Run 'python polling.py help' for usage.")
     
