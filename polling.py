@@ -404,12 +404,275 @@ def display_all_menu_items(menu_items: list[dict]):
         console.print()
 
 
+def validate_carts(event_id: str = None, test_item_id: str = None) -> dict:
+    """Test various cart-related endpoints to determine which are valid.
+
+    Tests multiple potential cart creation and management endpoints to see
+    which ones return successful responses. This helps identify the correct
+    API endpoints for cart operations.
+
+    Args:
+        event_id: Optional event ID to use in test requests.
+        test_item_id: Optional menu item ID to use for add-to-cart tests.
+
+    Returns:
+        Dictionary containing test results for each endpoint:
+        {
+            "endpoint_name": {
+                "status_code": int,
+                "success": bool,
+                "response": dict or str,
+                "error": str (if applicable)
+            }
+        }
+    """
+    import uuid
+
+    # Generate a test cart ID
+    test_cart_id = str(uuid.uuid4())
+
+    # Common headers used across all requests
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "Origin": "https://www.hotplate.com",
+        "Referer": "https://www.hotplate.com/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    }
+
+    # Define endpoints to test
+    endpoints = {
+        "shop.createCart": {
+            "url": "https://bets.hotplate.com/trpc/shop.createCart",
+            "method": "POST",
+            "input": {
+                "eventId": event_id or "test-event-id",
+                "fulfillmentType": "PICKUP"
+            }
+        },
+        "shop.addToCart": {
+            "url": "https://bets.hotplate.com/trpc/shop.addToCart",
+            "method": "POST",
+            "input": {
+                "cartId": test_cart_id,
+                "eventMenuItemId": test_item_id or "test-item-id",
+                "quantity": 1
+            }
+        },
+        "shop.getCart": {
+            "url": "https://bets.hotplate.com/trpc/shop.getCart",
+            "method": "GET",
+            "input": {
+                "cartId": test_cart_id
+            }
+        },
+        "shop.updateCart": {
+            "url": "https://bets.hotplate.com/trpc/shop.updateCart",
+            "method": "POST",
+            "input": {
+                "cartId": test_cart_id,
+                "items": []
+            }
+        },
+        "cart.create": {
+            "url": "https://bets.hotplate.com/trpc/cart.create",
+            "method": "POST",
+            "input": {
+                "eventId": event_id or "test-event-id"
+            }
+        },
+        "cart.addItem": {
+            "url": "https://bets.hotplate.com/trpc/cart.addItem",
+            "method": "POST",
+            "input": {
+                "cartId": test_cart_id,
+                "itemId": test_item_id or "test-item-id",
+                "quantity": 1
+            }
+        },
+        "cart.get": {
+            "url": "https://bets.hotplate.com/trpc/cart.get",
+            "method": "GET",
+            "input": {
+                "cartId": test_cart_id
+            }
+        }
+    }
+
+    results = {}
+
+    console.print("\n[bold cyan]Testing Cart API Endpoints[/bold cyan]\n")
+    console.print(f"[dim]Test Cart ID: {test_cart_id}[/dim]\n")
+
+    for endpoint_name, config in endpoints.items():
+        console.print(f"Testing [yellow]{endpoint_name}[/yellow]... ", end="")
+
+        try:
+            url = config["url"]
+            method = config["method"]
+            input_data = config["input"]
+
+            if method == "GET":
+                params = {"input": json.dumps(input_data)}
+                response = requests.get(url, params=params, headers=headers, timeout=10)
+            else:  # POST
+                response = requests.post(url, json={"input": input_data}, headers=headers, timeout=10)
+
+            # Parse response
+            try:
+                response_data = response.json()
+            except json.JSONDecodeError:
+                response_data = response.text
+
+            # Determine success (2xx status codes or specific API success patterns)
+            is_success = 200 <= response.status_code < 300
+
+            results[endpoint_name] = {
+                "status_code": response.status_code,
+                "success": is_success,
+                "response": response_data,
+                "url": url,
+                "method": method
+            }
+
+            # Display result
+            if is_success:
+                console.print("[green]✓ SUCCESS[/green]", f"({response.status_code})")
+            else:
+                console.print("[red]✗ FAILED[/red]", f"({response.status_code})")
+
+        except requests.exceptions.Timeout:
+            results[endpoint_name] = {
+                "status_code": None,
+                "success": False,
+                "error": "Request timeout",
+                "url": config["url"],
+                "method": config["method"]
+            }
+            console.print("[red]✗ TIMEOUT[/red]")
+
+        except requests.exceptions.RequestException as e:
+            results[endpoint_name] = {
+                "status_code": None,
+                "success": False,
+                "error": str(e),
+                "url": config["url"],
+                "method": config["method"]
+            }
+            console.print(f"[red]✗ ERROR[/red] ({str(e)[:50]})")
+
+    return results
+
+
+def display_cart_validation_results(results: dict):
+    """Display cart validation results in a formatted table.
+
+    Args:
+        results: Dictionary returned from validate_carts()
+    """
+    console.print("\n[bold cyan]Cart Validation Results[/bold cyan]\n")
+
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Endpoint", style="cyan", no_wrap=True)
+    table.add_column("Method", style="white", no_wrap=True)
+    table.add_column("Status", style="yellow", justify="center")
+    table.add_column("Result", style="white")
+    table.add_column("Details", style="dim", max_width=40)
+
+    for endpoint_name, result in results.items():
+        method = result.get("method", "N/A")
+        status_code = result.get("status_code")
+        status_str = str(status_code) if status_code else "N/A"
+
+        if result.get("success"):
+            result_str = "[green]✓ Valid[/green]"
+            details = "Endpoint is functional"
+        else:
+            result_str = "[red]✗ Invalid[/red]"
+            error = result.get("error", "")
+            if error:
+                details = error[:40]
+            else:
+                response = result.get("response", "")
+                if isinstance(response, dict):
+                    error_msg = response.get("error", {}).get("message", "")
+                    details = error_msg[:40] if error_msg else "Request failed"
+                else:
+                    details = str(response)[:40] if response else "Request failed"
+
+        table.add_row(endpoint_name, method, status_str, result_str, details)
+
+    console.print(table)
+
+    # Summary
+    successful = sum(1 for r in results.values() if r.get("success"))
+    total = len(results)
+    console.print(f"\n[bold]Summary:[/bold] {successful}/{total} endpoints validated successfully")
+
+    if successful > 0:
+        console.print("\n[green]Valid endpoints found:[/green]")
+        for endpoint_name, result in results.items():
+            if result.get("success"):
+                console.print(f"  • {endpoint_name} ({result['method']}) - {result['url']}")
+
+
 if __name__ == "__main__":
     #data = get_old_drops()
     #display_drops(data)
     #menu_data = get_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
     #display_menu_items(menu_data)
     #get_drop_info()
-    items = get_all_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    display_all_menu_items(items)
+    #items = get_all_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
+    #display_all_menu_items(items)
+
+    # First, test if the API is accessible at all
+    console.print("[bold cyan]Testing API connectivity...[/bold cyan]")
+    try:
+        response = requests.get("https://bets.hotplate.com/trpc/shop.getEvent", timeout=5)
+        console.print(f"[green]✓ API is accessible[/green] (status: {response.status_code})\n")
+    except Exception as e:
+        console.print(f"[red]✗ API connectivity issue: {e}[/red]\n")
+        console.print("[yellow]Network restriction detected. Showing test plan instead...[/yellow]\n")
+
+        # Show what the function would test
+        console.print("[bold cyan]Cart Validation Test Plan:[/bold cyan]\n")
+        console.print("The validate_carts() function tests the following endpoints:\n")
+
+        test_endpoints = [
+            ("shop.createCart", "POST", "Create a new shopping cart for an event"),
+            ("shop.addToCart", "POST", "Add menu items to an existing cart"),
+            ("shop.getCart", "GET", "Retrieve cart details and contents"),
+            ("shop.updateCart", "POST", "Update cart items or quantities"),
+            ("cart.create", "POST", "Alternative cart creation endpoint"),
+            ("cart.addItem", "POST", "Alternative add item endpoint"),
+            ("cart.get", "GET", "Alternative get cart endpoint"),
+        ]
+
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Endpoint", style="cyan")
+        table.add_column("Method", style="yellow", justify="center")
+        table.add_column("Purpose", style="white")
+
+        for endpoint, method, purpose in test_endpoints:
+            table.add_row(endpoint, method, purpose)
+
+        console.print(table)
+        console.print("\n[dim]Each endpoint is tested with realistic parameters to determine which APIs are functional for cart operations.[/dim]\n")
+
+        import sys
+        sys.exit(0)
+
+    # Test cart validation with a real event ID
+    results = validate_carts(event_id="458ea76e-1f07-44ed-b6d5-451287f8e10b")
+    display_cart_validation_results(results)
+
+    # Print detailed error for first failed endpoint
+    console.print("\n[bold yellow]Detailed Error Analysis:[/bold yellow]")
+    for endpoint_name, result in results.items():
+        if not result.get("success") and result.get("error"):
+            console.print(f"\n[cyan]{endpoint_name}:[/cyan]")
+            console.print(f"  Error: {result['error']}")
+            break
     
