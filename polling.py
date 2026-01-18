@@ -1,5 +1,5 @@
 """Utilities for retrieving Holey Dough drop information.
-1. I can make diret API calls to the shop.getEvent endpoint to get drop info for past events
+1. I can make direct API calls to the shop.getEvent endpoint to get drop info for past events
 2. Need to repeatedly poll endpoint to check for new events
 3. Once a new event is detected, create a Post request to place order
 """
@@ -87,8 +87,10 @@ def get_old_drops():
         data = response.json()
     except requests.exceptions.RequestException as e:
         console.print(f"[red]Error fetching drops: {e}[/red]")
-        return
-
+    return data
+    
+def display_drops(data: dict):
+    """Display past drop information in a formatted table."""
     past_events = data.get("result", {}).get("data", {}).get("pastEvents", [])
     if not past_events:
         console.print("[yellow]No past drops found.[/yellow]")
@@ -135,5 +137,6 @@ def get_old_drops():
     console.print(table)
 
 if __name__ == "__main__":
-    get_old_drops()
+    data = get_old_drops()
+    display_drops(data)
     
