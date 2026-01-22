@@ -618,6 +618,232 @@ def display_cart_validation_results(results: dict):
                 console.print(f"  • {endpoint_name} ({result['method']}) - {result['url']}")
 
 
+def get_upcoming_drops(chef_id: str = "holeydoughandco") -> dict:
+    """Fetch upcoming drop events from Holey Dough.
+
+    Args:
+        chef_id: The chef/vendor ID to fetch events for. Defaults to "holeydoughandco".
+
+    Returns:
+        Dictionary containing API response with upcoming events.
+    """
+    url = "https://bets.hotplate.com/trpc/shop.getPublicUpcomingEvents"
+    params = {
+        "input": json.dumps({
+            "chefId": chef_id,
+            "direction": "forward"
+        })
+    }
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "Origin": "https://www.hotplate.com",
+        "Referer": "https://www.hotplate.com/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    }
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        console.print(f"[red]Error fetching upcoming drops: {e}[/red]")
+        return {}
+
+
+def monitor_for_new_event(
+    chef_id: str = "holeydoughandco",
+    poll_interval: int = 5,
+    callback=None,
+    max_iterations: int = None
+) -> dict:
+    """Monitor for new drop events by polling the HotPlate API.
+
+    Continuously polls the API to detect when a new drop event goes live.
+    A drop is considered "live" when the current time is past its goLiveTime.
+
+    Args:
+        chef_id: The chef/vendor ID to monitor. Defaults to "holeydoughandco".
+        poll_interval: Seconds to wait between API polls. Defaults to 5.
+        callback: Optional function to call when a new event is detected.
+                 Called with the event dict as an argument.
+        max_iterations: Maximum number of polls to perform. None for infinite.
+
+    Returns:
+        Dictionary containing the newly detected live event, or empty dict if
+        max_iterations reached without finding a live event.
+
+    Example:
+        >>> def on_drop_live(event):
+        ...     print(f"Drop is live: {event['title']}")
+        ...
+        >>> monitor_for_new_event(poll_interval=2, callback=on_drop_live)
+    """
+    import time
+
+    console.print("\n[bold cyan]Monitoring for New Drop Events[/bold cyan]")
+    console.print(f"[dim]Chef: {chef_id} | Poll interval: {poll_interval}s[/dim]\n")
+
+    iteration = 0
+    seen_event_ids = set()
+    current_time_ms = int(time.time() * 1000)
+
+    # Initial fetch to populate seen events
+    console.print("[yellow]Fetching initial state...[/yellow]")
+    initial_data = get_upcoming_drops(chef_id)
+    upcoming_events = initial_data.get("result", {}).get("data", {}).get("upcomingEvents", [])
+
+    for event in upcoming_events:
+        event_id = event.get("id")
+        if event_id:
+            seen_event_ids.add(event_id)
+
+    console.print(f"[green]Found {len(seen_event_ids)} upcoming events in initial state[/green]\n")
+
+    # Display initial upcoming events
+    if upcoming_events:
+        display_upcoming_events(upcoming_events)
+
+    console.print(f"\n[bold yellow]Starting monitoring...[/bold yellow]")
+    console.print("[dim]Press Ctrl+C to stop[/dim]\n")
+
+    try:
+        while max_iterations is None or iteration < max_iterations:
+            iteration += 1
+            current_time_ms = int(time.time() * 1000)
+
+            # Fetch upcoming events
+            data = get_upcoming_drops(chef_id)
+            upcoming_events = data.get("result", {}).get("data", {}).get("upcomingEvents", [])
+
+            # Check for new events
+            for event in upcoming_events:
+                event_id = event.get("id")
+                go_live_time = event.get("goLiveTime")
+                title = event.get("title", "Unknown Event")
+
+                # Skip if we've seen this event before
+                if event_id in seen_event_ids:
+                    continue
+
+                # New event detected!
+                console.print(f"\n[bold green]🚨 NEW EVENT DETECTED![/bold green]")
+                console.print(f"[cyan]Title:[/cyan] {title}")
+                console.print(f"[cyan]Event ID:[/cyan] {event_id}")
+                console.print(f"[cyan]Go Live Time:[/cyan] {format_timestamp(go_live_time)}")
+
+                # Add to seen events
+                seen_event_ids.add(event_id)
+
+                # Check if event is already live
+                if go_live_time and current_time_ms >= go_live_time:
+                    console.print(f"[bold red]⚡ EVENT IS LIVE NOW! ⚡[/bold red]\n")
+
+                    # Execute callback if provided
+                    if callback:
+                        callback(event)
+
+                    return event
+                else:
+                    time_until_live = (go_live_time - current_time_ms) / 1000 if go_live_time else None
+                    if time_until_live:
+                        console.print(f"[yellow]Event goes live in {time_until_live:.0f} seconds[/yellow]\n")
+
+            # Check if any previously seen events have gone live
+            for event in upcoming_events:
+                event_id = event.get("id")
+                go_live_time = event.get("goLiveTime")
+                title = event.get("title", "Unknown Event")
+
+                if event_id in seen_event_ids and go_live_time:
+                    if current_time_ms >= go_live_time:
+                        console.print(f"\n[bold red]⚡ EVENT IS NOW LIVE! ⚡[/bold red]")
+                        console.print(f"[cyan]Title:[/cyan] {title}")
+                        console.print(f"[cyan]Event ID:[/cyan] {event_id}\n")
+
+                        # Execute callback if provided
+                        if callback:
+                            callback(event)
+
+                        return event
+
+            # Display status
+            if iteration % 10 == 0:
+                console.print(f"[dim]Poll #{iteration} - Monitoring {len(seen_event_ids)} events... ({datetime.now().strftime('%H:%M:%S')})[/dim]")
+
+            # Wait before next poll
+            time.sleep(poll_interval)
+
+    except KeyboardInterrupt:
+        console.print("\n\n[yellow]Monitoring stopped by user[/yellow]")
+        return {}
+
+    console.print(f"\n[yellow]Max iterations ({max_iterations}) reached[/yellow]")
+    return {}
+
+
+def display_upcoming_events(events: list[dict]):
+    """Display upcoming drop events in a formatted table.
+
+    Args:
+        events: List of upcoming event dictionaries from the API.
+    """
+    if not events:
+        console.print("[yellow]No upcoming events found.[/yellow]")
+        return
+
+    console.print(f"\n[bold cyan]Upcoming Drop Events ({len(events)})[/bold cyan]\n")
+
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Title", style="cyan", no_wrap=True)
+    table.add_column("Goes Live", style="green", no_wrap=True)
+    table.add_column("Order Cutoff", style="yellow", no_wrap=True)
+    table.add_column("Pickup Window", style="white", no_wrap=True)
+    table.add_column("Status", style="white", no_wrap=True)
+
+    current_time_ms = int(datetime.now().timestamp() * 1000)
+
+    for event in events:
+        title = event.get("title", "Untitled")
+        go_live_time = event.get("goLiveTime")
+        cutoff_time = event.get("orderCutoffTime")
+
+        go_live_str = format_timestamp(go_live_time)
+        cutoff_str = format_timestamp(cutoff_time)
+
+        # Determine status
+        if go_live_time:
+            if current_time_ms >= go_live_time:
+                status = "[green]LIVE[/green]"
+            else:
+                time_until = (go_live_time - current_time_ms) / 1000 / 60  # minutes
+                if time_until < 60:
+                    status = f"[yellow]{time_until:.0f}m[/yellow]"
+                else:
+                    hours = time_until / 60
+                    status = f"[dim]{hours:.1f}h[/dim]"
+        else:
+            status = "[dim]TBD[/dim]"
+
+        # Extract pickup window
+        pickup_time = "N/A"
+        time_windows = event.get("timeWindows", {})
+        if time_windows:
+            first_window = next(iter(time_windows.values()))
+            start = first_window.get("startTime")
+            end = first_window.get("endTime")
+            if start and end:
+                start_dt = datetime.fromtimestamp(start / 1000)
+                end_dt = datetime.fromtimestamp(end / 1000)
+                pickup_time = f"{start_dt.strftime('%I:%M%p').lower()}-{end_dt.strftime('%I:%M%p').lower()}"
+
+        table.add_row(title, go_live_str, cutoff_str, pickup_time, status)
+
+    console.print(table)
+
+
 if __name__ == "__main__":
     #data = get_old_drops()
     #display_drops(data)

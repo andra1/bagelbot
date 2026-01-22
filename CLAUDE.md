@@ -42,12 +42,14 @@ HotPlate uses TRPC endpoints with this structure:
 - `display_all_menu_items()` - Pretty-print full menu with options
 - `validate_carts()` - Test cart API endpoints for validity
 - `display_cart_validation_results()` - Display endpoint test results
+- `get_upcoming_drops()` - Fetch upcoming drop events
+- `monitor_for_new_event()` - Poll for upcoming events and detect when drops go live
+- `display_upcoming_events()` - Pretty-print upcoming events with status
 
 #### 🚧 In Progress
 - `create_cart()` - Initialize shopping cart session
 
 #### ⏳ Not Started
-- `monitor_for_new_event()` - Poll for upcoming (not past) events
 - `add_item_to_cart()` - Add items with option selections to cart
 - `get_cart()` - Retrieve current cart state
 - `select_time_window()` - Choose pickup time slot
