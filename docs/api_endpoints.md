@@ -188,5 +188,37 @@ display_cart_validation_results(results)
 
 ---
 
+## Verification Status
+
+| Requirement | Status | Notes |
+|-------------|--------|-------|
+| Endpoint URL documented | Done | Based on `validate_carts()` in polling.py |
+| HTTP method documented | Done | POST (inferred from TRPC pattern) |
+| Headers documented | Done | Copied from existing working endpoints |
+| Request body structure | Done | Based on code patterns |
+| Curl command | Done | **NOT VERIFIED** - requires live testing |
+| Response contains cartId | **UNVERIFIED** | Assumed `result.data.cartId` based on TRPC pattern |
+| cartId format | **UNVERIFIED** | Assumed UUID based on existing code example |
+| Consecutive runs succeed | **UNVERIFIED** | Requires live testing |
+
+### Required Manual Verification Steps
+
+Before this documentation can be considered complete per R1.1 success criteria:
+
+1. **Run curl command during active drop window** and capture actual response
+2. **Verify response path** - confirm `result.data.cartId` is correct or document actual path
+3. **Test cart retrieval** - use returned cartId with `shop.getCart` endpoint
+4. **Run twice** - confirm same curl command succeeds on consecutive runs
+5. **Update this document** with actual response examples
+
+### Known Limitations
+
+- Network restrictions prevented live API testing during documentation
+- The `shop.createCart` endpoint in `validate_carts()` has not been confirmed working
+- Response structure is assumed based on TRPC conventions, not observed responses
+
+---
+
 *Last Updated: 2026-01-22*
 *Discovery Method: Code analysis and TRPC pattern inference*
+*Verification Status: INCOMPLETE - requires live API testing*
