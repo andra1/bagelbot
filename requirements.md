@@ -5,11 +5,40 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
 
 ## R1: API Discovery & Reverse Engineering
 
-### R1.1: Cart Creation Endpoint Discovery
+### R1.1: Automated Cart Router Endpoint Discovery via JavaScript Bundle Analysis
+**Task**: Programmatically reverse engineer the HotPlate cart router by analyzing JavaScript bundles to discover ALL available cart-related TRPC endpoints
+
+- **Input**: HotPlate website URL (https://www.hotplate.com)
+- **Method**: Automated JavaScript bundle fetching, parsing, and TRPC router pattern extraction
+- **Success Criteria**:
+  - **Bundle Discovery & Fetching**: Function fetches main JavaScript bundle(s) from HotPlate website automatically; identifies all webpack/rollup chunks that may contain TRPC router definitions; downloads and caches bundles locally to `cache/js_bundles/` directory; handles minified and obfuscated JavaScript without manual intervention; logs bundle URLs, sizes, and SHA256 hashes for reproducibility
+  - **TRPC Router Pattern Recognition**: Identifies TRPC router definition patterns in minified code (e.g., `.router({`, `.procedure(`, `.query(`, `.mutation(`); extracts namespace patterns (e.g., `cart`, `shop`, `checkout`, `order`); detects procedure names within each namespace (e.g., `create`, `addItem`, `get`, `update`, `delete`); uses regex or AST parsing to handle code obfuscation and variable renaming
+  - **Cart-Specific Endpoint Extraction**: Filters for cart-related namespaces: `cart`, `shop.cart`, or any namespace containing cart operations; extracts minimum 10 distinct cart-related endpoints (create, add, remove, update, get, clear, etc.); for each endpoint: captures namespace, action name, HTTP method (GET/POST), and parameter structure; identifies input schema patterns (field names, required vs optional, data types)
+  - **JSON Output Structure**: Outputs to `docs/discovered_endpoints.json` with schema containing: `discovery_metadata` (timestamp, source_url, bundle_urls, discovery_method), `endpoints` array (namespace, action, full_path, trpc_url, http_method, input_schema, confidence, notes), and `summary` (total_endpoints, cart_endpoints, shop_endpoints, other_endpoints); JSON file is valid (passes `json.loads()` without errors); minimum 10 cart-related endpoints documented in output
+  - **Endpoint Validation Integration**: For each discovered endpoint: automatically tests against HotPlate API using `validate_carts()` approach; records validation results in `docs/discovered_endpoints.json` under each endpoint's `validation_result` field; validation includes: status code, response structure, error messages, success boolean; separates confirmed working endpoints from unconfirmed/failed endpoints in output; updates `confidence` level based on validation results (high = 2xx response, low = 4xx/5xx)
+  - **Parser Implementation**: Function `discover_cart_endpoints(url: str, use_cache: bool = True) -> dict` exists in new module `endpoint_discovery.py`; supports two parsing strategies: AST-based (using `ast` or `esprima`) OR regex-based patterns; includes fallback: if AST parsing fails, uses regex patterns as backup; handles JavaScript parsing errors gracefully with clear error messages; average execution time <30 seconds for full discovery + validation cycle
+  - **Source Map Support** (Optional Enhancement): Detects if source maps are available (`.map` files or inline); if source maps found: extracts unminified variable/function names for better accuracy; logs whether source maps were used in `discovery_metadata.source_maps_available` field; falls back to minified analysis if source maps unavailable
+  - **Error Handling & Logging**: Uses `rich.console` for formatted progress output during discovery; logs each stage: bundle fetching, parsing, pattern matching, validation; if no cart endpoints found: raises `ValueError` with message "No cart endpoints discovered in bundles"; if bundle download fails: raises `requests.HTTPError` with status code and URL; creates detailed log file at `logs/endpoint_discovery_{timestamp}.log` with debug information
+  - **Documentation Requirements**: New section in `docs/api_endpoints.md` titled "Automated Endpoint Discovery"; documents discovery method, patterns used, confidence levels, and validation approach; includes example command: `python endpoint_discovery.py --validate --output docs/discovered_endpoints.json`; README or CLAUDE.md updated with endpoint discovery as completed Phase 1 task; includes limitations section (e.g., "May miss runtime-generated endpoints")
+  - **Dependency Management**: If using AST parsing: adds `esprima` or `js2py` to `requirements.txt`; if using beautifulsoup: leverages existing dependency (no new deps needed); all new dependencies documented in requirements.txt with version pinning; no dependencies that require Node.js/npm (Python-only solution)
+  - **CLI Interface**: Supports command-line arguments: `--url`, `--output`, `--validate`, `--no-cache`; `--validate` flag: runs validation tests on discovered endpoints; `--no-cache` flag: forces fresh bundle download (skips cache); `--output` flag: specifies custom output path (default: `docs/discovered_endpoints.json`); help text accessible via `python endpoint_discovery.py --help`
+  - **Comparison with Manual Discovery**: Script compares discovered endpoints with those in existing `validate_carts()` function; identifies NEW endpoints not in manual test list (logs count of new discoveries); identifies MISSING endpoints (tested manually but not discovered automatically); output includes `discovery_comparison` section showing overlap analysis
+  - **Reproducibility & Caching**: Cached bundles stored with timestamp and hash to detect changes; running discovery twice in a row returns identical results (deterministic); cache invalidation after 24 hours or when bundle hash changes; `--force-refresh` flag bypasses all caches for clean discovery
+  - **Integration Test**: Test function `test_endpoint_discovery()` in `endpoint_discovery.py` main block; test validates: bundle download succeeds, parsing extracts >5 endpoints, JSON schema valid, one endpoint validates successfully; test runs in <60 seconds on typical network connection; test prints summary: "Discovered X endpoints, validated Y successfully"
+  - **Performance Optimization**: Parallel validation of discovered endpoints (using `concurrent.futures` or `asyncio`); bundle parsing uses streaming/chunked reading for large files (>5MB); regex compilation cached for repeated pattern matching; total execution time <2 minutes for discovery + validation of 20+ endpoints
+
+**Implementation Notes**:
+- **Parsing Strategy**: (1) First attempt to fetch source maps if available for unminified code analysis, (2) If source maps unavailable, use regex patterns to find TRPC router definitions, (3) Common patterns to search: `cart:router()` or `cart:{` (namespace declarations), `create:publicProcedure`, `addItem:protectedProcedure` (procedure definitions), `.input(z.object({` (Zod schema definitions)
+- **JavaScript Analysis Tools**: Regex-based (fast, simple, works on minified code, may miss complex patterns) vs AST-based with esprima (more accurate, handles obfuscation better, slower, requires valid JavaScript). Recommended: Hybrid approach using regex for initial filtering, AST for detailed extraction
+- **Integration**: `validate_carts()` function in polling.py (lines 407-566) becomes validation engine for discovered endpoints; discovered endpoints can populate test cases automatically
+- **Why This Approach**: Advantages include completeness (discovers ALL endpoints in bundle, not just those used during manual testing), automation (runs in seconds without human interaction), version detection (automatically detects when HotPlate updates their API via bundle hash changes), auto-documentation, and maintainability (re-run script after HotPlate updates)
+- **Limitations to Document**: Only discovers endpoints present in client-side bundles (server-only endpoints missed); may not capture runtime-generated or dynamic endpoints; input schema inference may be incomplete if Zod schemas are complex; confidence levels are heuristic-based, not guaranteed accurate
+
+### R1.2: Cart Creation Endpoint Discovery
 **Task**: Identify the correct API endpoint and request format for creating a shopping cart
 - **Input**: Active event ID from a live drop window
 - **Method**: Chrome DevTools network inspection during manual cart creation
-- **Success Criteria**: 
+- **Success Criteria**:
   - Endpoint URL documented in `docs/api_endpoints.md` with full path
   - HTTP method (GET/POST) documented
   - All required headers documented with example values
@@ -20,7 +49,7 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
   - cartId value is non-empty string (document format: UUID/random/other)
   - Same curl command succeeds on 2 consecutive runs (not one-time token)
 
-### R1.2: Add to Cart Endpoint Discovery  
+### R1.3: Add to Cart Endpoint Discovery  
 **Task**: Identify API endpoint for adding items with options to cart
 - **Input**: Valid cart ID, event menu item ID, quantity, selected options
 - **Method**: Network inspection during manual item addition
@@ -34,7 +63,7 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
   - Test with item containing 2+ option categories (e.g., bagel + schmear) succeeds
   - Selected options appear in cart item's options/selections field
 
-### R1.3: Time Window Selection Discovery
+### R1.4: Time Window Selection Discovery
 **Task**: Identify how pickup time windows are selected/assigned
 - **Method**: Network inspection during time window selection
 - **Success Criteria**:
@@ -47,7 +76,7 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
   - timeWindow.id field matches the requested/assigned window ID
   - timeWindow object includes startTime and endTime fields (document format: ISO/epoch)
 
-### R1.4: Checkout Flow Discovery
+### R1.5: Checkout Flow Discovery
 **Task**: Map complete checkout process from cart to order confirmation
 - **Method**: Network inspection during full checkout flow
 - **Success Criteria**:
@@ -88,7 +117,7 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
 - **Success Criteria**: 
   - File `order_config.json` exists in project root
   - File is valid JSON (can be parsed without errors)
-  - Field names match API request format documented in R1.2
+  - Field names match API request format documented in R1.3
   - Schema includes example item with 0 options (simple item)
   - Schema includes example item with 2+ option categories (complex item)
   - Python script can load file with `json.load()` and access all fields
@@ -113,8 +142,8 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
 **Task**: Define `.env` structure for sensitive data
 - **Required fields**:
   - Customer info: `CUSTOMER_NAME`, `CUSTOMER_EMAIL`, `CUSTOMER_PHONE`
-  - Payment info: Structure TBD based on R1.4 findings
-  - Authentication: Cookies/tokens TBD based on R1.4 findings
+  - Payment info: Structure TBD based on R1.5 findings
+  - Authentication: Cookies/tokens TBD based on R1.5 findings
 - **Success Criteria**: 
   - File `.env.example` exists in project root
   - All customer info fields present with placeholder values
@@ -187,7 +216,7 @@ Automate order placement for Holey Dough bagel drops via HotPlate platform API t
   - With empty cart: raises `ValueError` with message containing "empty" or "no items"
   - With cart missing time window: raises `ValueError` with message containing "time window"
   - Function reads CUSTOMER_NAME, CUSTOMER_EMAIL, CUSTOMER_PHONE from environment
-  - Function reads payment fields from environment (based on R1.4 findings)
+  - Function reads payment fields from environment (based on R1.5 findings)
   - HTTP response status code is 200-299
   - Average execution time <1000ms over 3 runs
   - After successful checkout, original cart_id becomes invalid (returns 404 or "not found")
