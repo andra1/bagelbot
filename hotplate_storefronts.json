@@ -1,0 +1,1402 @@
+[
+  {
+    "slug": "lavieenrosecafe",
+    "url": "https://www.hotplate.com/lavieenrosecafe",
+    "name": "504 Love Letters X La Vie En Rose Cafe",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "7kingsmarket",
+    "url": "https://www.hotplate.com/7kingsmarket",
+    "name": "7 Kings Market",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "atozcreamery",
+    "url": "https://www.hotplate.com/atozcreamery",
+    "name": "A to Z Creamery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "anxoi",
+    "url": "https://www.hotplate.com/anxoi",
+    "name": "An Xoi",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "annaoliviabakes",
+    "url": "https://www.hotplate.com/annaoliviabakes",
+    "name": "Anna Olivia Bakes",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "avesbread",
+    "url": "https://www.hotplate.com/avesbread",
+    "name": "Ave\u2019s Bread",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "bethbakessourdough",
+    "url": "https://www.hotplate.com/bethbakessourdough",
+    "name": "BE Bread",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "bakesum",
+    "url": "https://www.hotplate.com/bakesum",
+    "name": "Bake Sum Pastries",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "bakersoftomorrow",
+    "url": "https://www.hotplate.com/bakersoftomorrow",
+    "name": "Bakers of Tomorrow",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "baoliciousatl",
+    "url": "https://www.hotplate.com/baoliciousatl",
+    "name": "Baolicious ATL",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "barefootlanemn",
+    "url": "https://www.hotplate.com/barefootlanemn",
+    "name": "Barefoot Lane MN",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "barkandhearth",
+    "url": "https://www.hotplate.com/barkandhearth",
+    "name": "Bark &amp; Hearth LLC",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "batch22bakery",
+    "url": "https://www.hotplate.com/batch22bakery",
+    "name": "Batch 22 Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "befreeicecream",
+    "url": "https://www.hotplate.com/befreeicecream",
+    "name": "Be Free Craft Ice Cream",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "beaucoup_nyc",
+    "url": "https://www.hotplate.com/beaucoup_nyc",
+    "name": "Beaucoup",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "blackjetpizzanight",
+    "url": "https://www.hotplate.com/blackjetpizzanight",
+    "name": "Black Jet Baking Co.",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "bloomanddough",
+    "url": "https://www.hotplate.com/bloomanddough",
+    "name": "Bloom &amp; Dough",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "bluegrasslandcattlecollc",
+    "url": "https://www.hotplate.com/bluegrasslandcattlecollc",
+    "name": "Bluegrass Land and Cattle Co, LLC",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "boardcrumbco",
+    "url": "https://www.hotplate.com/boardcrumbco",
+    "name": "Board + Crumb Co. Sourdough",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "boulesandbagels",
+    "url": "https://www.hotplate.com/boulesandbagels",
+    "name": "Boules And Bagels",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "brazosbagel",
+    "url": "https://www.hotplate.com/brazosbagel",
+    "name": "Brazos Bagel | Summer Lane Coffee",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "breadbybridget",
+    "url": "https://www.hotplate.com/breadbybridget",
+    "name": "Bread By Bridget",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "breaddropstl",
+    "url": "https://www.hotplate.com/breaddropstl",
+    "name": "Bread Drop",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "breadandbutter",
+    "url": "https://www.hotplate.com/breadandbutter",
+    "name": "Bread and Butter",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "breadroom",
+    "url": "https://www.hotplate.com/breadroom",
+    "name": "Breadroom Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "briarpatchoven",
+    "url": "https://www.hotplate.com/briarpatchoven",
+    "name": "Briar Patch Oven",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "brickhousebakery",
+    "url": "https://www.hotplate.com/brickhousebakery",
+    "name": "Brick House Bakery",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "brosiabowl",
+    "url": "https://www.hotplate.com/brosiabowl",
+    "name": "Brosia Bowl",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "brownsugar",
+    "url": "https://www.hotplate.com/brownsugar",
+    "name": "Brown Sugar Bake Shop",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "butterandcrumble",
+    "url": "https://www.hotplate.com/butterandcrumble",
+    "name": "Butter And Crumble",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "caloscookies",
+    "url": "https://www.hotplate.com/caloscookies",
+    "name": "Calos Cookies",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "capitoljillbaking",
+    "url": "https://www.hotplate.com/capitoljillbaking",
+    "name": "Capitol Jill Baking",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "chainsawla",
+    "url": "https://www.hotplate.com/chainsawla",
+    "name": "Chainsaw",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "charcuterieatx",
+    "url": "https://www.hotplate.com/charcuterieatx",
+    "name": "Charcuterie ATX",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "chefschonberg",
+    "url": "https://www.hotplate.com/chefschonberg",
+    "name": "Chef Schonbergs",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "chouxpastries",
+    "url": "https://www.hotplate.com/chouxpastries",
+    "name": "Choux",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "cicisgourmethomebakery",
+    "url": "https://www.hotplate.com/cicisgourmethomebakery",
+    "name": "CiCi\u2019s Gourmet Home Bakery LLC",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "cocoiskitchen",
+    "url": "https://www.hotplate.com/cocoiskitchen",
+    "name": "Cocoi\u2019s Kitchen",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "coppertopkitchen",
+    "url": "https://www.hotplate.com/coppertopkitchen",
+    "name": "Coppertop Kitchen",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "craftedfoodservices",
+    "url": "https://www.hotplate.com/craftedfoodservices",
+    "name": "Crafted Food Services",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "creeksidebread",
+    "url": "https://www.hotplate.com/creeksidebread",
+    "name": "Creekside Bread",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "crumbsourdoughmicrobakery",
+    "url": "https://www.hotplate.com/crumbsourdoughmicrobakery",
+    "name": "Crumb Sourdough Microbakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "crustycravings",
+    "url": "https://www.hotplate.com/crustycravings",
+    "name": "Crusty Cravings, LLC",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "cuebakeshop",
+    "url": "https://www.hotplate.com/cuebakeshop",
+    "name": "Cue Bakeshop",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "delaneyssourdough",
+    "url": "https://www.hotplate.com/delaneyssourdough",
+    "name": "Delaney\u2019s Sourdough",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "delicioushealthybakes",
+    "url": "https://www.hotplate.com/delicioushealthybakes",
+    "name": "Delicious Healthy Bakes",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "diersdoughhaus",
+    "url": "https://www.hotplate.com/diersdoughhaus",
+    "name": "Diers\u2019 Dough Haus ",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "doughbabybakehouse",
+    "url": "https://www.hotplate.com/doughbabybakehouse",
+    "name": "Dough Baby Bakehouse",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "duluthflowerfarm",
+    "url": "https://www.hotplate.com/duluthflowerfarm",
+    "name": "Duluth Flower Farm",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "dumplingclub",
+    "url": "https://www.hotplate.com/dumplingclub",
+    "name": "Dumpling Club",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "eastsidecheesecakes",
+    "url": "https://www.hotplate.com/eastsidecheesecakes",
+    "name": "East Side Cheesecakes",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "risingdoughco",
+    "url": "https://www.hotplate.com/risingdoughco",
+    "name": "EatOvation by Rising DoughCo",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "elderflourbakingco",
+    "url": "https://www.hotplate.com/elderflourbakingco",
+    "name": "Elderflour Baking Company ",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "elegantimpressionsbakery",
+    "url": "https://www.hotplate.com/elegantimpressionsbakery",
+    "name": "Elegant Impressions Bakery ",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "elevensesco",
+    "url": "https://www.hotplate.com/elevensesco",
+    "name": "Elevenses Co",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "enumclawfarm",
+    "url": "https://www.hotplate.com/enumclawfarm",
+    "name": "Enumclaw Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "familycraftbreadsnbakes",
+    "url": "https://www.hotplate.com/familycraftbreadsnbakes",
+    "name": "Family Craft Breads + Bakes",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "flarabakery",
+    "url": "https://www.hotplate.com/flarabakery",
+    "name": "FlaRa Bakery",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "503flourshop",
+    "url": "https://www.hotplate.com/503flourshop",
+    "name": "Flour Shop, LLC",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "fromlino",
+    "url": "https://www.hotplate.com/fromlino",
+    "name": "From Lino",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "frontrangecannery",
+    "url": "https://www.hotplate.com/frontrangecannery",
+    "name": "Front Range Cannery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "fullbellybakery",
+    "url": "https://www.hotplate.com/fullbellybakery",
+    "name": "Full Belly Bakery",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "ginzanishikawa",
+    "url": "https://www.hotplate.com/ginzanishikawa",
+    "name": "Ginza Nishikawa",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "girlgangbakery",
+    "url": "https://www.hotplate.com/girlgangbakery",
+    "name": "Girl Gang Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "goldengrain",
+    "url": "https://www.hotplate.com/goldengrain",
+    "name": "Golden Grain Artisanal Bread",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "gooeycenter",
+    "url": "https://www.hotplate.com/gooeycenter",
+    "name": "Gooey Center Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "gracegrainco",
+    "url": "https://www.hotplate.com/gracegrainco",
+    "name": "Grace &amp; Grain Co",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "happyhenbakerybyhayley",
+    "url": "https://www.hotplate.com/happyhenbakerybyhayley",
+    "name": "Happy Hen Bakery by Hayley",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "harespawfarm",
+    "url": "https://www.hotplate.com/harespawfarm",
+    "name": "Hare&#x27;s Paw Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "harrishearthbreads",
+    "url": "https://www.hotplate.com/harrishearthbreads",
+    "name": "Harris Hearth Breads",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "hatchingloafsbakery",
+    "url": "https://www.hotplate.com/hatchingloafsbakery",
+    "name": "Hatching Loafs Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "hayleysdonut",
+    "url": "https://www.hotplate.com/hayleysdonut",
+    "name": "Hayley&#x27;s Donut | Gluten Free Nut Free",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "heycrowbakery",
+    "url": "https://www.hotplate.com/heycrowbakery",
+    "name": "Hey Crow Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "holeydoughandco",
+    "url": "https://www.hotplate.com/holeydoughandco",
+    "name": "Holey Dough &amp; Co.",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "articles",
+    "url": "https://www.hotplate.com/articles",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "sweetcondesapastries",
+    "url": "https://www.hotplate.com/sweetcondesapastries",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "baketent917",
+    "url": "https://www.hotplate.com/baketent917",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "sourdoughmamatn",
+    "url": "https://www.hotplate.com/sourdoughmamatn",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "robots",
+    "url": "https://www.hotplate.com/robots",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "tthelittleladdbakery",
+    "url": "https://www.hotplate.com/tthelittleladdbakery",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "categories",
+    "url": "https://www.hotplate.com/categories",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "buckin",
+    "url": "https://www.hotplate.com/buckin",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "livingwellwithmandy",
+    "url": "https://www.hotplate.com/livingwellwithmandy",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "_next",
+    "url": "https://www.hotplate.com/_next",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "anniestcakes",
+    "url": "https://www.hotplate.com/anniestcakes",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "hearthanddough",
+    "url": "https://www.hotplate.com/hearthanddough",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "danthebakerchicago",
+    "url": "https://www.hotplate.com/danthebakerchicago",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "_axiom",
+    "url": "https://www.hotplate.com/_axiom",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "astrandabakery",
+    "url": "https://www.hotplate.com/astrandabakery",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "modernveganmom",
+    "url": "https://www.hotplate.com/modernveganmom",
+    "name": "Hotplate",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "jandmsourdoughbagels",
+    "url": "https://www.hotplate.com/jandmsourdoughbagels",
+    "name": "J and M Sourdough Bagels",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "mommafish",
+    "url": "https://www.hotplate.com/mommafish",
+    "name": "Japonica",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "jojosbreadbasket",
+    "url": "https://www.hotplate.com/jojosbreadbasket",
+    "name": "Jojo\u2019s Bread Basket",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "jojoscookies",
+    "url": "https://www.hotplate.com/jojoscookies",
+    "name": "Jojo\u2019s Cookies",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "josephinesbakehouse",
+    "url": "https://www.hotplate.com/josephinesbakehouse",
+    "name": "Josephine&#x27;s Bakehouse",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "junababka",
+    "url": "https://www.hotplate.com/junababka",
+    "name": "Juna",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "junipervalleyfarm",
+    "url": "https://www.hotplate.com/junipervalleyfarm",
+    "name": "Juniper valley",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "justdoughit",
+    "url": "https://www.hotplate.com/justdoughit",
+    "name": "Just Dough It",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sweetenedcondensed",
+    "url": "https://www.hotplate.com/sweetenedcondensed",
+    "name": "Khanoms",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "kioskbakery",
+    "url": "https://www.hotplate.com/kioskbakery",
+    "name": "Kiosk Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "fromkora",
+    "url": "https://www.hotplate.com/fromkora",
+    "name": "Kora",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "kwamschickenproject",
+    "url": "https://www.hotplate.com/kwamschickenproject",
+    "name": "Kwam&#x27;s Chicken Project",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "lallamitavegana",
+    "url": "https://www.hotplate.com/lallamitavegana",
+    "name": "La Llamita Vegana",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "ladyflour",
+    "url": "https://www.hotplate.com/ladyflour",
+    "name": "Lady Flour",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "lagniappebaking",
+    "url": "https://www.hotplate.com/lagniappebaking",
+    "name": "Lagniappe Bakehouse &amp; Coffee",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "lakehouse",
+    "url": "https://www.hotplate.com/lakehouse",
+    "name": "Lakehouse Bakery Isabella",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "lindsayslittlebakery",
+    "url": "https://www.hotplate.com/lindsayslittlebakery",
+    "name": "Lindsay\u2019s Little Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "lmbreadco",
+    "url": "https://www.hotplate.com/lmbreadco",
+    "name": "Little Mill Bread Co.",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "littlepearlbreads",
+    "url": "https://www.hotplate.com/littlepearlbreads",
+    "name": "Little Pearl Breads &amp; Bakes",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "localbreadbaker",
+    "url": "https://www.hotplate.com/localbreadbaker",
+    "name": "Local Bread Baker",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "mainelysourdough",
+    "url": "https://www.hotplate.com/mainelysourdough",
+    "name": "Mainely Sourdough",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "malbyspastries",
+    "url": "https://www.hotplate.com/malbyspastries",
+    "name": "Malby\u2019s pastries",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "mamasdoughhouse",
+    "url": "https://www.hotplate.com/mamasdoughhouse",
+    "name": "Mama\u2019s Dough House",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "marinabaybakery",
+    "url": "https://www.hotplate.com/marinabaybakery",
+    "name": "Marina Bay Bakery",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "mauirusticcrust",
+    "url": "https://www.hotplate.com/mauirusticcrust",
+    "name": "Maui Rustic Crust",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "mamnyc",
+    "url": "https://www.hotplate.com/mamnyc",
+    "name": "Ma\u0306\u0301m",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "mcintyresbakehouse",
+    "url": "https://www.hotplate.com/mcintyresbakehouse",
+    "name": "McIntyre&#x27;s Bakehouse",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "mondopistachio",
+    "url": "https://www.hotplate.com/mondopistachio",
+    "name": "Mondo Pistachio",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "sundaybakeshop",
+    "url": "https://www.hotplate.com/sundaybakeshop",
+    "name": "Neighbor Bakehouse &amp; Sunday Bakeshop",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "nomoreboringcakes",
+    "url": "https://www.hotplate.com/nomoreboringcakes",
+    "name": "No More Boring Cakes Horse Trailer",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "nonnamariasbakery",
+    "url": "https://www.hotplate.com/nonnamariasbakery",
+    "name": "Nonna Maria&#x27;s Bakery, LLC",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "nourishedbaker",
+    "url": "https://www.hotplate.com/nourishedbaker",
+    "name": "Nourished Baker",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "nourishedbreadandbakery",
+    "url": "https://www.hotplate.com/nourishedbreadandbakery",
+    "name": "Nourished Bread and Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "nourisheddsm",
+    "url": "https://www.hotplate.com/nourisheddsm",
+    "name": "Nourished DSM",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "okcharleys",
+    "url": "https://www.hotplate.com/okcharleys",
+    "name": "OK Charley&#x27;s Craft Barbecue",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "oldoaksourdough",
+    "url": "https://www.hotplate.com/oldoaksourdough",
+    "name": "Old Oak Sourdough",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "oohdelolli",
+    "url": "https://www.hotplate.com/oohdelolli",
+    "name": "Ooh De Lolli Bakeshop",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "orcutticecream",
+    "url": "https://www.hotplate.com/orcutticecream",
+    "name": "Orcutt Ice Cream Kitchen",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "patraleeskitchen",
+    "url": "https://www.hotplate.com/patraleeskitchen",
+    "name": "PATRA LEE\u2019S KITCHEN",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "pascaleskitchen",
+    "url": "https://www.hotplate.com/pascaleskitchen",
+    "name": "Pascale&#x27;s Kitchen",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "pearlriverdeli",
+    "url": "https://www.hotplate.com/pearlriverdeli",
+    "name": "Pearl River Deli",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "pedestrianfarm",
+    "url": "https://www.hotplate.com/pedestrianfarm",
+    "name": "Pedestrian Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "peppspizzeria",
+    "url": "https://www.hotplate.com/peppspizzeria",
+    "name": "Pepp&#x27;s Pizzeria",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "piebirdpies",
+    "url": "https://www.hotplate.com/piebirdpies",
+    "name": "Pie Bird Pies",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "pintsbybeth",
+    "url": "https://www.hotplate.com/pintsbybeth",
+    "name": "Pints By Beth",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "pinupcoffeeco",
+    "url": "https://www.hotplate.com/pinupcoffeeco",
+    "name": "Pinup Coffee Co",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "plainjanebakes",
+    "url": "https://www.hotplate.com/plainjanebakes",
+    "name": "Plain \u2022 Jane Bakes",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsfairfield",
+    "url": "https://www.hotplate.com/popupbagelsfairfield",
+    "name": "PopUp Bagels Fairfield",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsues",
+    "url": "https://www.hotplate.com/popupbagelsues",
+    "name": "PopUp Bagels UES",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsonthemove",
+    "url": "https://www.hotplate.com/popupbagelsonthemove",
+    "name": "Popup Bagels",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelseasthampton",
+    "url": "https://www.hotplate.com/popupbagelseasthampton",
+    "name": "Popup Bagels - Amagansett",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsgreenwich",
+    "url": "https://www.hotplate.com/popupbagelsgreenwich",
+    "name": "Popup Bagels - Greenwich",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsmardens",
+    "url": "https://www.hotplate.com/popupbagelsmardens",
+    "name": "Popup Bagels - Mardens",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsredding",
+    "url": "https://www.hotplate.com/popupbagelsredding",
+    "name": "Popup Bagels - Redding",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsthecolonypalmbeach",
+    "url": "https://www.hotplate.com/popupbagelsthecolonypalmbeach",
+    "name": "Popup Bagels - The Colony Palm Beach",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsthompson",
+    "url": "https://www.hotplate.com/popupbagelsthompson",
+    "name": "Popup Bagels - Thompson",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelswestport",
+    "url": "https://www.hotplate.com/popupbagelswestport",
+    "name": "Popup Bagels - Westport",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsnewtown",
+    "url": "https://www.hotplate.com/popupbagelsnewtown",
+    "name": "Popup Bagels Newtown",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "popupbagelsuws",
+    "url": "https://www.hotplate.com/popupbagelsuws",
+    "name": "Popup Bagels UWS",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "quarterhorserva",
+    "url": "https://www.hotplate.com/quarterhorserva",
+    "name": "Quarter Horse",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "revengepies",
+    "url": "https://www.hotplate.com/revengepies",
+    "name": "Revenge Pies",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "riseagain",
+    "url": "https://www.hotplate.com/riseagain",
+    "name": "Rise Again Bread",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "runningbrookbakery",
+    "url": "https://www.hotplate.com/runningbrookbakery",
+    "name": "Running Brook Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "rushcreekbread",
+    "url": "https://www.hotplate.com/rushcreekbread",
+    "name": "Rush Creek Bread",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "sayabakery_nj",
+    "url": "https://www.hotplate.com/sayabakery_nj",
+    "name": "SAYA Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sacredforest",
+    "url": "https://www.hotplate.com/sacredforest",
+    "name": "Sacred Forest",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "samzsweetz",
+    "url": "https://www.hotplate.com/samzsweetz",
+    "name": "Samz Sweetz",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sarahssourdough",
+    "url": "https://www.hotplate.com/sarahssourdough",
+    "name": "Sarah&#x27;s Sourdough",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sebagel",
+    "url": "https://www.hotplate.com/sebagel",
+    "name": "Sebagel",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "secondbreakfastfarm",
+    "url": "https://www.hotplate.com/secondbreakfastfarm",
+    "name": "Second Breakfast Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "slowtorisebakery",
+    "url": "https://www.hotplate.com/slowtorisebakery",
+    "name": "Slow to Rise Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "smokemade",
+    "url": "https://www.hotplate.com/smokemade",
+    "name": "Smokemade Meats + Eats",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "soupbelly",
+    "url": "https://www.hotplate.com/soupbelly",
+    "name": "Soupbelly",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "soursisterbakery",
+    "url": "https://www.hotplate.com/soursisterbakery",
+    "name": "Sour Sister Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sedoughco",
+    "url": "https://www.hotplate.com/sedoughco",
+    "name": "Southeast Dough Co.",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "spreadtheloaves",
+    "url": "https://www.hotplate.com/spreadtheloaves",
+    "name": "Spread The Loaves",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sprinklesandspoons",
+    "url": "https://www.hotplate.com/sprinklesandspoons",
+    "name": "Sprinkles and Spoons",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "stillseekingfarm",
+    "url": "https://www.hotplate.com/stillseekingfarm",
+    "name": "Still Seeking Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "stonercreek",
+    "url": "https://www.hotplate.com/stonercreek",
+    "name": "Stoner Creek Baking Co.",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "stopdropnroll",
+    "url": "https://www.hotplate.com/stopdropnroll",
+    "name": "Stop Drop N Roll",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sucrepatisseriega",
+    "url": "https://www.hotplate.com/sucrepatisseriega",
+    "name": "Sucr\u00e9 P\u00e2tisserie",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sugarmagnoliarva",
+    "url": "https://www.hotplate.com/sugarmagnoliarva",
+    "name": "Sugar Magnolia RVA",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "sweetladyjanesbakery",
+    "url": "https://www.hotplate.com/sweetladyjanesbakery",
+    "name": "Sweet Lady Jane\u2019s Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "tsbunderground",
+    "url": "https://www.hotplate.com/tsbunderground",
+    "name": "TSB Underground",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "tasteandseemicrobakery",
+    "url": "https://www.hotplate.com/tasteandseemicrobakery",
+    "name": "Taste &amp; See Microbakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "thebbqbroker",
+    "url": "https://www.hotplate.com/thebbqbroker",
+    "name": "The BBQ Broker",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "theonedough",
+    "url": "https://www.hotplate.com/theonedough",
+    "name": "The One Dough",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "theplace",
+    "url": "https://www.hotplate.com/theplace",
+    "name": "The Place Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "theporchandladle",
+    "url": "https://www.hotplate.com/theporchandladle",
+    "name": "The Porch &amp; Ladle - Neighborhood Microbakery",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "ridiculousfarm",
+    "url": "https://www.hotplate.com/ridiculousfarm",
+    "name": "The Ridiculous Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "theroyalwomb",
+    "url": "https://www.hotplate.com/theroyalwomb",
+    "name": "The Royal Womb",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "thesourdogbakery",
+    "url": "https://www.hotplate.com/thesourdogbakery",
+    "name": "The Sourdog",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "oakandashfarm",
+    "url": "https://www.hotplate.com/oakandashfarm",
+    "name": "The Sourdough Kitchen at Oak and Ash Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "tangyloaf",
+    "url": "https://www.hotplate.com/tangyloaf",
+    "name": "The Tangy Loaf",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "tomodachi",
+    "url": "https://www.hotplate.com/tomodachi",
+    "name": "Tomodachi Bakeshoppe",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "twinbearsbakery",
+    "url": "https://www.hotplate.com/twinbearsbakery",
+    "name": "Twin Bears Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "unrealpoke",
+    "url": "https://www.hotplate.com/unrealpoke",
+    "name": "Unreal Poke",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "uproaricecream",
+    "url": "https://www.hotplate.com/uproaricecream",
+    "name": "Uproar Ice Cream \ud83c\udf66\ud83d\ude0b",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "veganbanhmithao",
+    "url": "https://www.hotplate.com/veganbanhmithao",
+    "name": "Vegan Banh Mi Thao",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "victorypointroastery",
+    "url": "https://www.hotplate.com/victorypointroastery",
+    "name": "Victory Point Roastery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "voodoovegan",
+    "url": "https://www.hotplate.com/voodoovegan",
+    "name": "VoodooVegan",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "wkndbake",
+    "url": "https://www.hotplate.com/wkndbake",
+    "name": "WKND Bake",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "whittlebirdcoffee",
+    "url": "https://www.hotplate.com/whittlebirdcoffee",
+    "name": "Whittle Bird Bakeshop",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "wunderloaf",
+    "url": "https://www.hotplate.com/wunderloaf",
+    "name": "Wunderloaf",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "xinmoi",
+    "url": "https://www.hotplate.com/xinmoi",
+    "name": "Xin M\u1eddi",
+    "has_active_drop": false,
+    "status": "valid"
+  },
+  {
+    "slug": "zendoughbakery",
+    "url": "https://www.hotplate.com/zendoughbakery",
+    "name": "Zen Dough Bakery",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "zwiefelhoferfamilyfarm",
+    "url": "https://www.hotplate.com/zwiefelhoferfamilyfarm",
+    "name": "Zwiefelhofer Family Farm",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "crumbsourdough",
+    "url": "https://www.hotplate.com/crumbsourdough",
+    "name": "crumb",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "moreitalianpastalab",
+    "url": "https://www.hotplate.com/moreitalianpastalab",
+    "name": "more italian pasta lab",
+    "has_active_drop": true,
+    "status": "valid"
+  },
+  {
+    "slug": "richshpirit",
+    "url": "https://www.hotplate.com/richshpirit",
+    "name": "rich spirit bagels",
+    "has_active_drop": true,
+    "status": "valid"
+  }
+]
