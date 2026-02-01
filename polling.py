@@ -6,6 +6,8 @@
 
 import requests
 import json
+import time
+from urllib.parse import urlparse
 from datetime import datetime
 from rich.console import Console
 from rich.table import Table
@@ -404,6 +406,167 @@ def display_all_menu_items(menu_items: list[dict]):
         console.print()
 
 
+def extract_slug_from_url(storefront_url: str) -> str:
+    """Extract chef_id/slug from storefront URL or return as-is if already a slug.
+
+    Args:
+        storefront_url: Full URL like "https://www.hotplate.com/holeydoughandco"
+                        or just the slug like "holeydoughandco"
+
+    Returns:
+        The slug/chef_id string (e.g., "holeydoughandco")
+    """
+    if "hotplate.com" in storefront_url:
+        parsed = urlparse(storefront_url)
+        path = parsed.path.strip("/")
+        return path.split("/")[0] if path else ""
+    return storefront_url.strip("/")
+
+
+def get_current_events(chef_id: str) -> list[dict]:
+    """Fetch events for a storefront via the HotPlate API.
+
+    Uses shop.getPublicPastEvents endpoint which returns recent events
+    (despite the name, this includes events that may still be active).
+    The caller should check is_event_active() to determine if orders are open.
+
+    Args:
+        chef_id: The storefront slug (e.g., "holeydoughandco")
+
+    Returns:
+        List of event dictionaries containing id, title, goLiveTime, orderCutoffTime
+    """
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "Origin": "https://www.hotplate.com",
+        "Referer": "https://www.hotplate.com/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    }
+
+    url = "https://bets.hotplate.com/trpc/shop.getPublicPastEvents"
+    params = {
+        "input": json.dumps({
+            "chefId": chef_id,
+            "direction": "forward"
+        })
+    }
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            events = data.get("result", {}).get("data", {}).get("pastEvents", [])
+            return events
+    except requests.exceptions.RequestException:
+        pass
+
+    return []
+
+
+def is_event_active(event: dict) -> bool:
+    """Check if an event is currently active (orders are open).
+
+    An event is active when:
+    - goLiveTime <= current_time < orderCutoffTime
+
+    Args:
+        event: Event dictionary with goLiveTime and orderCutoffTime fields
+
+    Returns:
+        True if the event is currently active, False otherwise
+    """
+    current_ms = int(time.time() * 1000)
+    go_live = event.get("goLiveTime", 0)
+    cutoff = event.get("orderCutoffTime", 0)
+
+    if not go_live or not cutoff:
+        return False
+
+    return go_live <= current_ms < cutoff
+
+
+def check_active_drop(storefront_url: str) -> dict | None:
+    """Check if a storefront has an active drop and update hotplate_storefronts.json.
+
+    An active drop is an event where orders are currently open
+    (goLiveTime <= now < orderCutoffTime).
+
+    Args:
+        storefront_url: Full URL like "https://www.hotplate.com/holeydoughandco"
+                        or just the slug like "holeydoughandco"
+
+    Returns:
+        Dictionary with event data if active drop found:
+        {
+            "event_id": str,
+            "title": str,
+            "chef_id": str,
+            "go_live_time": int,
+            "order_cutoff_time": int,
+            "time_remaining_seconds": int
+        }
+        None if no active drop found
+    """
+    slug = extract_slug_from_url(storefront_url)
+    if not slug:
+        console.print(f"[red]Invalid storefront URL: {storefront_url}[/red]")
+        return None
+
+    events = get_current_events(slug)
+    if not events:
+        return None
+
+    # Find an active event
+    active_event = None
+    for event in events:
+        if is_event_active(event):
+            active_event = event
+            break
+
+    if not active_event:
+        return None
+
+    current_ms = int(time.time() * 1000)
+    cutoff = active_event.get("orderCutoffTime", 0)
+    time_remaining = max(0, (cutoff - current_ms) // 1000)
+
+    result = {
+        "event_id": active_event.get("id"),
+        "title": active_event.get("title"),
+        "chef_id": slug,
+        "go_live_time": active_event.get("goLiveTime"),
+        "order_cutoff_time": cutoff,
+        "time_remaining_seconds": time_remaining
+    }
+
+    # Update hotplate_storefronts.json
+    storefronts_file = "hotplate_storefronts.json"
+    try:
+        with open(storefronts_file, "r") as f:
+            storefronts = json.load(f)
+
+        # Find and update the matching storefront
+        updated = False
+        for storefront in storefronts:
+            if storefront.get("slug") == slug:
+                storefront["has_active_drop"] = True
+                storefront["active_event_id"] = result["event_id"]
+                updated = True
+                break
+
+        if updated:
+            with open(storefronts_file, "w") as f:
+                json.dump(storefronts, f, indent=2)
+            console.print(f"[green]Updated {storefronts_file} with active event for {slug}[/green]")
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        console.print(f"[yellow]Could not update {storefronts_file}: {e}[/yellow]")
+
+    return result
+
+
 def validate_carts(event_id: str = None, test_item_id: str = None) -> dict:
     """Test various cart-related endpoints to determine which are valid.
 
@@ -566,6 +729,42 @@ def validate_carts(event_id: str = None, test_item_id: str = None) -> dict:
     return results
 
 
+def get_cart_by_id(cart_id: str) -> dict:
+    """Fetch cart details by cart ID from the HotPlate API.
+
+    Args:
+        cart_id: The unique identifier for the cart (UUID string).
+
+    Returns:
+        Dictionary containing cart data from the API response,
+        or empty dict if request fails.
+    """
+    url = "https://bets.hotplate.com/trpc/cart.getById"
+
+    params = {
+        "input": json.dumps({"cartId": cart_id})
+    }
+
+    headers = {
+        "Accept": "*/*",
+        "Accept-Encoding": "gzip, deflate, br, zstd",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Content-Type": "application/json",
+        "Origin": "https://www.hotplate.com",
+        "Referer": "https://www.hotplate.com/",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    }
+
+    try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
+        print(response.status_code)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        console.print(f"[red]Error fetching cart {cart_id}: {e}[/red]")
+        return {}
+
+
 def display_cart_validation_results(results: dict):
     """Display cart validation results in a formatted table.
 
@@ -619,60 +818,6 @@ def display_cart_validation_results(results: dict):
 
 
 if __name__ == "__main__":
-    #data = get_old_drops()
-    #display_drops(data)
-    #menu_data = get_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    #display_menu_items(menu_data)
-    #get_drop_info()
-    #items = get_all_menu_items("458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    #display_all_menu_items(items)
-
-    # First, test if the API is accessible at all
-    console.print("[bold cyan]Testing API connectivity...[/bold cyan]")
-    try:
-        response = requests.get("https://bets.hotplate.com/trpc/shop.getEvent", timeout=5)
-        console.print(f"[green]✓ API is accessible[/green] (status: {response.status_code})\n")
-    except Exception as e:
-        console.print(f"[red]✗ API connectivity issue: {e}[/red]\n")
-        console.print("[yellow]Network restriction detected. Showing test plan instead...[/yellow]\n")
-
-        # Show what the function would test
-        console.print("[bold cyan]Cart Validation Test Plan:[/bold cyan]\n")
-        console.print("The validate_carts() function tests the following endpoints:\n")
-
-        test_endpoints = [
-            ("shop.createCart", "POST", "Create a new shopping cart for an event"),
-            ("shop.addToCart", "POST", "Add menu items to an existing cart"),
-            ("shop.getCart", "GET", "Retrieve cart details and contents"),
-            ("shop.updateCart", "POST", "Update cart items or quantities"),
-            ("cart.create", "POST", "Alternative cart creation endpoint"),
-            ("cart.addItem", "POST", "Alternative add item endpoint"),
-            ("cart.get", "GET", "Alternative get cart endpoint"),
-        ]
-
-        table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Endpoint", style="cyan")
-        table.add_column("Method", style="yellow", justify="center")
-        table.add_column("Purpose", style="white")
-
-        for endpoint, method, purpose in test_endpoints:
-            table.add_row(endpoint, method, purpose)
-
-        console.print(table)
-        console.print("\n[dim]Each endpoint is tested with realistic parameters to determine which APIs are functional for cart operations.[/dim]\n")
-
-        import sys
-        sys.exit(0)
-
-    # Test cart validation with a real event ID
-    results = validate_carts(event_id="458ea76e-1f07-44ed-b6d5-451287f8e10b")
-    display_cart_validation_results(results)
-
-    # Print detailed error for first failed endpoint
-    console.print("\n[bold yellow]Detailed Error Analysis:[/bold yellow]")
-    for endpoint_name, result in results.items():
-        if not result.get("success") and result.get("error"):
-            console.print(f"\n[cyan]{endpoint_name}:[/cyan]")
-            console.print(f"  Error: {result['error']}")
-            break
+   result = get_cart_by_id("56ed682c-adde-4cda-b245-7deb49decb50")
+   console.print(f"[bold cyan]Cart Details:[/bold cyan]\n{json.dumps(result, indent=2)}")   
     

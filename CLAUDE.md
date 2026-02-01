@@ -27,7 +27,7 @@ Build an automated system that:
 ### API Pattern
 HotPlate uses TRPC endpoints with this structure:
 - Base URL: `https://bets.hotplate.com/trpc/`
-- Pattern: `namespace.action` (e.g., `shop.getEvent`, `cart.create`)
+- Pattern: `namespace.action` (e.g., `shop.getEvent`)
 - Request format: GET with JSON-encoded `input` parameter
 - Response format: `{"result": {"data": {...}}}`
 
@@ -38,13 +38,24 @@ HotPlate uses TRPC endpoints with this structure:
 - `get_old_drop_event_ids()` - Extract event IDs and metadata
 - `display_drops()` - Pretty-print drop history
 - `get_menu_items()` - Fetch basic menu for an event
-- `get_all_menu_items()` - Fetch detailed menu with options/inventory
+- `get_all_menu_items()` - Fetch detailed menu with options/inventory ## this doesn't actually work
 - `display_all_menu_items()` - Pretty-print full menu with options
 - `validate_carts()` - Test cart API endpoints for validity
 - `display_cart_validation_results()` - Display endpoint test results
 
 #### 🚧 In Progress
 - `create_cart()` - Initialize shopping cart session
+
+#### Current pain points
+
+- the cart appears to load dynamically on the page, it's not a clear API endpoint that it's hitting
+- the cart is also only valid for 5 minutes so I don't believe any session cookies or user profile
+is being saved
+- we can't test the create_cart method on the holey dough shop because there isn't any active drop
+- we need to first find an open drop event from A to Z creamery and test if we can create a valid cart
+from an endpoint there, still not sure what is the exact parameters we need to put into the json request for the create cart function
+- if you use an expired cart id and try to hit the endpoint it will still give you a 200 status code
+but the returning json payload will be empty with a data attribute set to null
 
 #### ⏳ Not Started
 - `monitor_for_new_event()` - Poll for upcoming (not past) events
